@@ -1,21 +1,70 @@
 {
-    "prefix": "/api/v1",
-    "groups": [
+    "services": [
         {
-            "name":"auth", 
-            "apis":[
-                {
-                    "name":"/", 
-                    "method":"GET", 
-                    "responese":"{\"code\":0, \"result\":\"success\", \"data\":{}", 
-                    "headers":[], 
-                    "request":"", 
-                    "queries":[]
+            "name": "default",
+            "port": 3000,
+            "prefix": "",
+            "groups": {
+                "/api/v1": {
+                    "apis": {
+                        "/test": {
+                            "methods": {
+                                "GET": {
+                                    "responese": "{\"aaa\":1}",
+                                    "request": "",
+                                    "headers": {
+                                        "Content-Type": "application/json"
+                                    },
+                                    "queries": {
+                                        "aaa": "1"
+                                    }
+                                },
+                                "POST": {
+                                    "responese": "{\"bbb\":3}",
+                                    "request": "",
+                                    "headers": {
+                                        "Content-Type": "application/json"
+                                    },
+                                    "queries": {
+                                        "bbb": "3"
+                                    }
+                                }
+                            },
+                            "auth": ""
+                        }
+                    },
+                    "auth": ""
                 }
-            ]
+            },
+            "apis": {
+                "/auth": {
+                    "methods": {
+                        "GET": {
+                            "responese": "{\"aaa\":1}",
+                            "request": "",
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "queries": {
+                                "aaa": "1"
+                            }
+                        },
+                        "POST": {
+                            "responese": "{\"bbb\":3}",
+                            "request": "",
+                            "headers": {
+                                "Content-Type": "application/json"
+                            },
+                            "queries": {
+                                "bbb": "3"
+                            }
+                        }
+                    },
+                    "auth": ""
+                }
+            },
+            "description": "",
+            "enabled": false
         }
-    ],
-    "apis":[
-
     ]
 }
