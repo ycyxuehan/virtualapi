@@ -10,8 +10,8 @@
                         "/test": {
                             "methods": {
                                 "GET": {
-                                    "responese": "{\"aaa\":1}",
-                                    "request": "",
+                                    "responese": {"aaa":1},
+                                    "request": {},
                                     "headers": {
                                         "Content-Type": "application/json"
                                     },
@@ -20,8 +20,8 @@
                                     }
                                 },
                                 "POST": {
-                                    "responese": "{\"bbb\":3}",
-                                    "request": "",
+                                    "responese": {"bbb":3},
+                                    "request": {},
                                     "headers": {
                                         "Content-Type": "application/json"
                                     },
@@ -40,8 +40,8 @@
                 "/auth": {
                     "methods": {
                         "GET": {
-                            "responese": "{\"aaa\":1}",
-                            "request": "",
+                            "responese": {"aaa":1},
+                            "request": {},
                             "headers": {
                                 "Content-Type": "application/json"
                             },
@@ -50,8 +50,8 @@
                             }
                         },
                         "POST": {
-                            "responese": "{\"bbb\":3}",
-                            "request": "",
+                            "responese": {"bbb":1},
+                            "request": {},
                             "headers": {
                                 "Content-Type": "application/json"
                             },

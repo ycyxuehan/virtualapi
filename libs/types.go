@@ -39,3 +39,4 @@ func (r *ResponseMessage)ToBytes()[]byte {
 	data, _ := json.MarshalIndent(r, "", "\t")
 	return data
 }
+

@@ -34,24 +34,24 @@ func NewService(name string) *Service {
 }
 
 //AddGroup 添加一个API组
-func (s *Service)AddGroup(location string, group *APIGroup)error{
+func (s *Service)AddGroup(group *APIGroup)error{
 	for g := range s.Groups {
-		if g == location {
-			return fmt.Errorf("group [%s] 已存在", location)
+		if g == group.Name {
+			return fmt.Errorf("group [%s] 已存在", group.Name)
 		}
 	}
-	s.Groups[location] = group
+	s.Groups[group.Name] = group
 	return nil
 }
 
-//AddAPI 添加一个API
-func (s *Service)AddAPI(location string, api *API)error{
+//AddOwnAPI 添加一个独立API
+func (s *Service)AddOwnAPI(api *API)error{
 	for g := range s.APIs {
-		if g == location {
-			return fmt.Errorf("api [%s] 已存在", location)
+		if g == api.Name {
+			return fmt.Errorf("api [%s] 已存在", api.Name)
 		}
 	}
-	s.APIs[location] = api
+	s.APIs[api.Name] = api
 	return nil
 }
 //GetAPI 获得匹配URL的API配置
@@ -85,9 +85,15 @@ func (s *Service)GetAPI(URL string)(*API, error){
 }
 
 func (s *Service)ServeHTTP(w http.ResponseWriter, r *http.Request){
+	msg := ResponseMessage{}
+	if r.RequestURI == "/favicon.ico" {
+		msg.Code = 404
+		msg.Message = "404 not found"
+		w.Write(msg.ToBytes())
+		return
+	}
 	fmt.Printf("%s [%s] %s\n", time.Now().Format("2000-01-02 15:04:05"), r.Method, r.RequestURI)
 	api, err := s.GetAPI(r.RequestURI)
-	msg := ResponseMessage{}
 	if err != nil {
 		msg.Code = 404
 		msg.Message = err.Error()
@@ -113,4 +119,47 @@ func (s *Service)Run(done chan Message)error{
 	err := http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", s.Port), s)
 	done <- Message{s.Name, false}
 	return err
+}
+
+//IsGroupExists service中是否存在API组
+func (s *Service)IsGroupExists(group string)bool{
+	for g := range s.Groups {
+		if g == group {
+			return true
+		}
+	}
+	return false
+}
+//AddGroupAPI 添加一个API到group
+func (s *Service)AddGroupAPI(group string, api *API)error{
+	if s.IsGroupExists(group) {
+		return s.Groups[group].AddAPI(api)
+	}
+	g := NewAPIGroup(group)
+	g.AddAPI(api)
+	s.Groups[group] = g
+	return nil
+}
+
+//AddAPI 添加一个API
+func (s *Service)AddAPI(api *API, group string)error{
+	if group == "" {
+		return s.AddOwnAPI(api)
+	}
+	return s.AddGroupAPI(group, api)
+}
+
+//GetMethods 获取method列表
+func (s *Service)GetMethods(api string, group string)[]string{
+	res := []string{}
+	if group == "" {
+		if g, ok:= s.Groups[group]; ok {
+			return g.GetMethods(api)
+		}
+	}else {
+		if a, ok := s.APIs[api]; ok {
+			return a.GetMethods()
+		}
+	}
+	return res
 }

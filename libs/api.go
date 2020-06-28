@@ -34,21 +34,23 @@ func NewMethod(m string)Method{
 
 //APIArgs Api conf
 type APIArgs struct {
-	Responese string   `json:"responese"`
-	Request   string   `json:"request"`
+	Responese map[string]interface{}   `json:"responese"`
+	Request    map[string]interface{}   `json:"request"`
 	Headers   map[string]string  `json:"headers"`
 	Queries   map[string]string  `json:"queries"`
 }
 
 //API Api conf
 type API struct {
+	Name string `json:"name"`
 	Methods map[string]*APIArgs	`json:"methods"`
 	Auth string	`json:"auth"`
 } 
 
 //NewAPI create a new api
-func NewAPI() *API {
+func NewAPI(name string) *API {
 	return &API{
+		Name: name,
 		Methods: make(map[string]*APIArgs),
 		Auth: "",
 	}
@@ -103,4 +105,13 @@ func (a *APIArgs)DelQuery(key string){
 //DelHeader 删除一个Header
 func (a *APIArgs)DelHeader(key string){
 	delete(a.Queries, key)
+}
+
+//GetMethods 获取method列表
+func (api *API)GetMethods()[]string{
+	res := []string{}
+	for m := range api.Methods {
+		res = append(res, m)
+	}
+	return res
 }

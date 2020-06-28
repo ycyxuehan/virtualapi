@@ -6,6 +6,9 @@ import (
 	"os"
 )
 
+//Config 配置
+var Config Configuration
+
 //Configuration virtual api server configuration
 type Configuration struct {
 	Services []*Service `json:"services"`
@@ -44,4 +47,14 @@ func (c *Configuration)Save(file string)error {
 //AddService create a service and add it
 func (c *Configuration)AddService(svc *Service){
 	c.Services = append(c.Services, svc)
+}
+
+//GetService 通过service名称获取service
+func (c *Configuration)GetService(name string)*Service {
+	for _, svc := range c.Services {
+		if svc.Name == name {
+			return svc
+		}
+	}
+	return nil
 }
