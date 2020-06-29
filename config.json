@@ -1,70 +1,127 @@
 {
-    "services": [
-        {
-            "name": "default",
-            "port": 3000,
-            "prefix": "",
-            "groups": {
-                "/api/v1": {
-                    "apis": {
-                        "/test": {
-                            "methods": {
-                                "GET": {
-                                    "responese": {"aaa":1},
-                                    "request": {},
-                                    "headers": {
-                                        "Content-Type": "application/json"
-                                    },
-                                    "queries": {
-                                        "aaa": "1"
-                                    }
-                                },
-                                "POST": {
-                                    "responese": {"bbb":3},
-                                    "request": {},
-                                    "headers": {
-                                        "Content-Type": "application/json"
-                                    },
-                                    "queries": {
-                                        "bbb": "3"
-                                    }
-                                }
-                            },
-                            "auth": ""
-                        }
-                    },
-                    "auth": ""
-                }
-            },
-            "apis": {
-                "/auth": {
-                    "methods": {
-                        "GET": {
-                            "responese": {"aaa":1},
-                            "request": {},
-                            "headers": {
-                                "Content-Type": "application/json"
-                            },
-                            "queries": {
-                                "aaa": "1"
-                            }
-                        },
-                        "POST": {
-                            "responese": {"bbb":1},
-                            "request": {},
-                            "headers": {
-                                "Content-Type": "application/json"
-                            },
-                            "queries": {
-                                "bbb": "3"
-                            }
-                        }
-                    },
-                    "auth": ""
-                }
-            },
-            "description": "",
-            "enabled": false
-        }
-    ]
+	"services": [
+		{
+			"name": "demo",
+			"port": 3000,
+			"prefix": "",
+			"groups": {
+				"/api/v1": {
+					"name": "/api/v1",
+					"apis": {
+						"/demo": {
+							"name": "/demo",
+							"methods": {
+								"GET": {
+									"method": "GET",
+									"responese": {
+										"age": 12,
+										"ccc": "a7",
+										"name": "demo"
+									},
+									"request": null,
+									"headers": {
+										"Content-Type": "application/json"
+									},
+									"queries": null
+								},
+								"POST": {
+									"method": "POST",
+									"responese": {
+										"age": 32,
+										"ccc": "x6",
+										"name": "tom"
+									},
+									"request": null,
+									"headers": {
+										"Content-Type": "application/json"
+									},
+									"queries": null
+								}
+							},
+							"auth": ""
+						}
+					},
+					"auth": ""
+				}
+			},
+			"apis": {
+				"/demo": {
+					"name": "/demo",
+					"methods": {
+						"GET": {
+							"method": "GET",
+							"responese": {
+								"age": 12,
+								"ccc": "a7",
+								"name": "demo"
+							},
+							"request": null,
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"queries": null
+						},
+						"POST": {
+							"method": "POST",
+							"responese": {
+								"age": 32,
+								"ccc": "x6",
+								"name": "tom"
+							},
+							"request": null,
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"queries": null
+						}
+					},
+					"auth": ""
+				}
+			},
+			"description": "",
+			"enabled": true
+		},
+		{
+			"name": "default",
+			"port": 3001,
+			"prefix": "",
+			"groups": {},
+			"apis": {
+				"/demo": {
+					"name": "/demo",
+					"methods": {
+						"GET": {
+							"method": "GET",
+							"responese": {
+								"age": 12,
+								"ccc": "a7",
+								"name": "demo"
+							},
+							"request": null,
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"queries": null
+						},
+						"POST": {
+							"method": "POST",
+							"responese": {
+								"age": 32,
+								"ccc": "x6",
+								"name": "tom"
+							},
+							"request": null,
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"queries": null
+						}
+					},
+					"auth": ""
+				}
+			},
+			"description": "",
+			"enabled": true
+		}
+	]
 }

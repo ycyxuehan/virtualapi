@@ -58,3 +58,12 @@ func (c *Configuration)GetService(name string)*Service {
 	}
 	return nil
 }
+
+//GetServiceNames 获取所有service名称
+func (c *Configuration)GetServiceNames()[]string {
+	res := []string{}
+	for _, svc := range c.Services {
+		res = append(res, svc.Name)
+	}
+	return res
+}

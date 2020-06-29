@@ -33,7 +33,7 @@ func (g *APIGroup)AddAPI(a *API)error {
 }
 
 //AddMethod 添加一个method
-func (g *APIGroup)AddMethod(name string, method string, args *APIArgs)error {
+func (g *APIGroup)AddMethod(name string, method string, args *APIMethod)error {
 	for l := range g.APIs {
 		if l == name {
 			return g.APIs[name].AddMethod(method, args)

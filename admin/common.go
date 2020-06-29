@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-
 	"bing89.com/virtualapi/libs"
 	"github.com/gin-gonic/gin"
 )
@@ -84,6 +83,22 @@ func AddAPI(c *gin.Context){
 func GetAPIs(c *gin.Context){
 
 }
+
+//GetService 获取API列表
+//@route [GET] /admin/service/:name
+func GetService(c *gin.Context){
+	service := c.Param("name")
+	svc := libs.Config.GetService(service)
+	ServeJSON(c, Success, "success", svc)
+}
+
+//GetServices 获取API列表
+//@route [GET] /admin/services
+func GetServices(c *gin.Context){
+	svcs := libs.Config.GetServiceNames()
+	ServeJSON(c, Success, "success", &svcs)
+}
+
 //AddService 添加一个服务
 //@route [POST] /admin/service
 func AddService(c *gin.Context){
@@ -106,7 +121,7 @@ func AddService(c *gin.Context){
 //GetMethods 获取API的method列表
 //@route [GET] /admin/api/:name/methods?service=[string]&group=[string]
 func GetMethods(c *gin.Context){
-	api := c.Param(":name")
+	api := c.Param("name")
 	service := c.Query("service")
 	group := c.Query("group")
 	svc := libs.Config.GetService(service)

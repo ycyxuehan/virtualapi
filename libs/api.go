@@ -32,8 +32,9 @@ func NewMethod(m string)Method{
 	}
 }
 
-//APIArgs Api conf
-type APIArgs struct {
+//APIMethod Api conf
+type APIMethod struct {
+	Method string `json:"method"`
 	Responese map[string]interface{}   `json:"responese"`
 	Request    map[string]interface{}   `json:"request"`
 	Headers   map[string]string  `json:"headers"`
@@ -43,7 +44,7 @@ type APIArgs struct {
 //API Api conf
 type API struct {
 	Name string `json:"name"`
-	Methods map[string]*APIArgs	`json:"methods"`
+	Methods map[string]*APIMethod	`json:"methods"`
 	Auth string	`json:"auth"`
 } 
 
@@ -51,13 +52,13 @@ type API struct {
 func NewAPI(name string) *API {
 	return &API{
 		Name: name,
-		Methods: make(map[string]*APIArgs),
+		Methods: make(map[string]*APIMethod),
 		Auth: "",
 	}
 }
 
 //AddMethod 为API添加一个method
-func (api *API)AddMethod(method string, args *APIArgs)error{
+func (api *API)AddMethod(method string, args *APIMethod)error{
 	for m := range api.Methods {
 		if m == method {
 			return fmt.Errorf("[%s] method is exists", method)
@@ -68,7 +69,7 @@ func (api *API)AddMethod(method string, args *APIArgs)error{
 }
 
 //GetMethod 获取一个对应Method的配置
-func (api *API)GetMethod(method string)(*APIArgs, error){
+func (api *API)GetMethod(method string)(*APIMethod, error){
 	if args, ok := api.Methods[method]; ok {
 		return args, nil
 	}
@@ -76,7 +77,7 @@ func (api *API)GetMethod(method string)(*APIArgs, error){
 }
 
 //AddHeader 添加一个header
-func (a *APIArgs)AddHeader(key string, value string) error {
+func (a *APIMethod)AddHeader(key string, value string) error {
 	for k := range a.Headers {
 		if key == k {
 			return fmt.Errorf("header [%s] exists", k)
@@ -87,7 +88,7 @@ func (a *APIArgs)AddHeader(key string, value string) error {
 }
 
 //AddQuery 添加一个Query
-func (a *APIArgs)AddQuery(key string, value string)error{
+func (a *APIMethod)AddQuery(key string, value string)error{
 	for k := range a.Queries {
 		if k == key {
 			return fmt.Errorf("query [%s] exists", key)
@@ -98,12 +99,12 @@ func (a *APIArgs)AddQuery(key string, value string)error{
 }
 
 //DelQuery 删除一个Query
-func (a *APIArgs)DelQuery(key string){
+func (a *APIMethod)DelQuery(key string){
 	delete(a.Queries, key)
 }
 
 //DelHeader 删除一个Header
-func (a *APIArgs)DelHeader(key string){
+func (a *APIMethod)DelHeader(key string){
 	delete(a.Queries, key)
 }
 
