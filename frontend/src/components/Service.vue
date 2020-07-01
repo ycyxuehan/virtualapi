@@ -37,7 +37,7 @@
       </Row>
     </div>
    
-    <Modal v-model="addAPIDlgVis" title="添加一个API">
+    <Modal v-model="addAPIDlgVis" title="添加一个API" @on-ok="addApi">
       <Row>
         <Col span="8">
           <span>{{label}}</span>
@@ -88,11 +88,17 @@ export default {
       this.addAPIDlgVis = true;
     },
     addApi: function() {
+      console.info("addapidata:", JSON.stringify({
+          service: this.service.name,
+          group: this.addApiData.group,
+          api: this.addApiData.name
+        }))
       if (this.addApiData.groupMode) {
         AddGroup({
           service: this.service.name,
           group: this.addApiData.name
         }).then(res => {
+          console.info("addgroup:", res)
           if (res.code == 0) {
             //
           }
@@ -103,6 +109,8 @@ export default {
           group: this.addApiData.group,
           api: this.addApiData.name
         }).then(res => {
+                    console.info("addapi:", res)
+
           if (res.code == 0) {
             //
           }

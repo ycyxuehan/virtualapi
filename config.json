@@ -76,6 +76,11 @@
 						}
 					],
 					"auth": ""
+				},
+				{
+					"name": "/test",
+					"methods": [],
+					"auth": ""
 				}
 			],
 			"description": "",

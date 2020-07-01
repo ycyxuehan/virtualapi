@@ -2,6 +2,7 @@ package libs
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 )
@@ -9,6 +10,12 @@ import (
 //Config 配置
 var Config Configuration
 
+//DoneChan 监控服务运行
+var DoneChan chan Message
+
+func init(){
+	DoneChan = make(chan Message)
+}
 //Configuration virtual api server configuration
 type Configuration struct {
 	filePath string
@@ -69,8 +76,21 @@ func (c *Configuration)SaveAs(file string)error {
 
 //AddService create a service and add it
 func (c *Configuration)AddService(svc *Service)error{
+	for _, s := range c.Services {
+		if s.Name == svc.Name {
+			return fmt.Errorf("service %s 已存在", svc.Name)
+		}
+		if s.Port == svc.Port {
+			return fmt.Errorf("服务端口已占用")
+		}
+	}
 	c.Services = append(c.Services, svc)
-	return c.Save()
+	err := c.Save()
+	if err != nil {
+		return fmt.Errorf("保存服务失败:%v", err)
+	}
+	go svc.Run(DoneChan)
+	return nil
 }
 
 //GetService 通过service名称获取service

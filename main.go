@@ -26,14 +26,14 @@ func main(){
 	group.POST("/api/method", admin.AddMethod)
 	go router.Run("0.0.0.0:2999")
 
-	done := make(chan libs.Message)
+	// done := make(chan libs.Message)
 	running := make(map[string]bool)
 	for _, s := range libs.Config.Services {
-		go s.Run(done)
+		go s.Run(libs.DoneChan)
 	}
 	for {
 		select {
-			case msg := <- done: {
+			case msg := <- libs.DoneChan: {
 				if msg.Running {
 					running[msg.Service] = msg.Running
 				}else {

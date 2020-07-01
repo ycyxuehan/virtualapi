@@ -8,17 +8,17 @@ export const GetServices = () => {
 export const GetService = (name) => {
   return axios.get(`${prefix}/service/${name}`).then((res) => res.data);
 };
-export const AddService = () => {
-  return axios.post(`${prefix}/service`).then((res) => res.data);
+export const AddService = (data) => {
+  return axios.post(`${prefix}/service`, data).then((res) => res.data);
 };
 export const AddGroup = (params) => {
   return axios
-    .post(`${prefix}/group`, { params: params })
+    .post(`${prefix}/group`, null, { params: params })
     .then((res) => res.data);
 };
 export const AddAPI = (params) => {
   return axios
-    .post(`${prefix}/api`, { params: params })
+    .post(`${prefix}/api`, null, { params: params })
     .then((res) => res.data);
 };
 export const AddMethod = (params, data) => {

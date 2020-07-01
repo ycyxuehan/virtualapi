@@ -1,14 +1,56 @@
 <template>
   <div class="home">
-    <Header class="service-header"><h3>Service {{service.name}}</h3></Header>
+    <Header class="group-title"><Row>
+      <Col span="22">
+        <h3>Service {{service.name}} <Tag>端口：{{service.port}}</Tag></h3>
+      </Col>
+      <Col span="2">
+        <Button type="primary" @click="showAddServiceDlg">添加服务</Button>
+      </Col>
+    </Row></Header>
     <service-container :service="service"/>
+    <Modal
+      v-model="addServiceDlgVis"
+      title="添加一个服务"
+      @on-ok="addService"
+      >
+      <Row>
+        <Col span="8">
+          <span>服务名称</span>
+        </Col>
+        <Col span="16">
+          <Input v-model="addServiceData.name" placeholder=""></Input>
+        </Col>
+      </Row>
+      <Col span="8">
+          <span>服务端口</span>
+        </Col>
+        <Col span="16">
+          <Input v-model="addServiceData.port" placeholder=""></Input>
+        </Col>
+      </Row>
+             <Col span="8">
+          <span>API前缀</span>
+        </Col>
+        <Col span="16">
+          <Input v-model="addServiceData.prefix" placeholder=""></Input>
+        </Col>
+      </Row>
+             <Col span="8">
+          <span>说明</span>
+        </Col>
+        <Col span="16">
+          <Input v-model="addServiceData.description" placeholder=""></Input>
+        </Col>
+      </Row>
+    </Modal>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import ServiceContainer from "@/components/Service.vue";
-import {GetService} from "@/api/api.js"
+import {GetService, AddService} from "@/api/api.js"
 export default {
   name: "Service",
   components: {
@@ -16,7 +58,10 @@ export default {
   },
   data(){
     return {
-      service:{}
+      service:{},
+      addServiceData:{
+        name: "",
+      },
     }
   },
   methods: {
@@ -29,6 +74,17 @@ export default {
           this.service = res.data;
         }
       })
+    },
+    addService: function(){
+      AddService(this.addServiceData).then(res=>{
+        console.info("add service:", res)
+        if(res.code == 0){
+
+        }
+      })
+    },
+    showAddServiceDlg: function(){
+      this.addServiceDlgVis = true
     }
   },
   mounted(){
