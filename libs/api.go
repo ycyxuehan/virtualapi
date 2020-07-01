@@ -35,12 +35,23 @@ func NewMethod(m string)Method{
 //APIMethod Api conf
 type APIMethod struct {
 	Method string `json:"method"`
-	Responese map[string]interface{}   `json:"responese"`
+	Response map[string]interface{}   `json:"response"`
 	Request    map[string]interface{}   `json:"request"`
 	Headers   map[string]string  `json:"headers"`
 	Queries   map[string]string  `json:"queries"`
 }
 
+//NewAPIMethod 使用string创建一个APIMethod
+func NewAPIMethod(m string)*APIMethod{
+	method := APIMethod{
+		Method: m,
+		Response: make(map[string]interface{}),
+		Request: make(map[string]interface{}),
+		Headers: make(map[string]string),
+		Queries: make(map[string]string),
+	}
+	return &method
+}
 //API Api conf
 type API struct {
 	Name string `json:"name"`
@@ -58,13 +69,13 @@ func NewAPI(name string) *API {
 }
 
 //AddMethod 为API添加一个method
-func (api *API)AddMethod(method string, args *APIMethod)error{
+func (api *API)AddMethod(args *APIMethod)error{
 	for m := range api.Methods {
-		if m == method {
-			return fmt.Errorf("[%s] method is exists", method)
+		if m == args.Method {
+			return fmt.Errorf("[%s] method is exists", args.Method)
 		}
 	}
-	api.Methods[strings.ToUpper(method)] = args
+	api.Methods[strings.ToUpper(args.Method)] = args
 	return nil
 }
 

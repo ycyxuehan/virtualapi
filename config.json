@@ -13,7 +13,7 @@
 							"methods": {
 								"GET": {
 									"method": "GET",
-									"responese": {
+									"response": {
 										"age": 12,
 										"ccc": "a7",
 										"name": "demo"
@@ -26,7 +26,7 @@
 								},
 								"POST": {
 									"method": "POST",
-									"responese": {
+									"response": {
 										"age": 32,
 										"ccc": "x6",
 										"name": "tom"
@@ -50,7 +50,7 @@
 					"methods": {
 						"GET": {
 							"method": "GET",
-							"responese": {
+							"response": {
 								"age": 12,
 								"ccc": "a7",
 								"name": "demo"
@@ -63,7 +63,7 @@
 						},
 						"POST": {
 							"method": "POST",
-							"responese": {
+							"response": {
 								"age": 32,
 								"ccc": "x6",
 								"name": "tom"
@@ -92,7 +92,7 @@
 					"methods": {
 						"GET": {
 							"method": "GET",
-							"responese": {
+							"response": {
 								"age": 12,
 								"ccc": "a7",
 								"name": "demo"
@@ -105,7 +105,7 @@
 						},
 						"POST": {
 							"method": "POST",
-							"responese": {
+							"response": {
 								"age": 32,
 								"ccc": "x6",
 								"name": "tom"

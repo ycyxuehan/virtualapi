@@ -26,17 +26,12 @@ func AddGroup(c *gin.Context){
 		ServeJSON(c, ParamError, "service名称为空", nil)
 		return
 	}
-	svc := libs.Config.GetService(name)
-	if svc == nil {
-		ServeJSON(c, ObjectNotFound, "service不存在", nil)
-		return
-	}
 	group := c.Request.Form.Get("group")
 	if group == "" {
 		ServeJSON(c, ParamError, "group名称为空", nil)
 		return
 	}
-	err := svc.AddGroup(libs.NewAPIGroup(group))
+	err := libs.Config.AddGroup(name, group)
 	if err != nil {
 		ServeJSON(c, AddObjectError, err, nil)
 		return
@@ -58,11 +53,6 @@ func AddAPI(c *gin.Context){
 		ServeJSON(c, ReadPostDataError, err, nil)
 		return
 	}
-	svc := libs.Config.GetService(name)
-	if svc == nil {
-		ServeJSON(c, ObjectNotFound, "service不存在", nil)
-		return
-	}
 	api := libs.NewAPI("")
 	err = json.Unmarshal(data, api)
 	if err != nil {
@@ -70,7 +60,8 @@ func AddAPI(c *gin.Context){
 		return
 	}
 	group := c.Query("group")
-	err = svc.AddAPI(api, group)
+	//这里有问题，这个功能暂时不用
+	err = libs.Config.AddAPI(name,group, api.Name)
 	if err != nil {
 		ServeJSON(c, AddObjectError, err, nil)
 		return
@@ -78,10 +69,52 @@ func AddAPI(c *gin.Context){
 	ServeJSON(c, Success, "success", nil)
 }
 
-//GetAPIs 获取API列表
-//@route [GET] /admin/api?group=[string]&service=[string]
-func GetAPIs(c *gin.Context){
+//AddEmptyAPI 添加一个API
+//@route [POST] /admin/api?group=[string]&service=[string]&api=[string]
+func AddEmptyAPI(c *gin.Context){
+	name := c.Query("service")
+	if name == "" {
+		ServeJSON(c, ParamError, "service名称为空", nil)
+		return
+	}
+	apiName:=c.Query("api")
+	group := c.Query("group")
+	err := libs.Config.AddAPI(name, group, apiName)
+	if err != nil {
+		ServeJSON(c, AddObjectError, err, nil)
+		return
+	}
+	ServeJSON(c, Success, "success", nil)
+}
 
+//AddMethod 获取API列表
+//@route [POST] /admin/api/method?api=[string]&group=[string]&service=[string]
+func AddMethod(c *gin.Context){
+	apiName := c.Query("api")
+	name := c.Query("service")
+	if name == "" {
+		ServeJSON(c, ParamError, "service名称为空", nil)
+		return
+	}
+	data, err := ioutil.ReadAll(c.Request.Body)
+	defer c.Request.Body.Close()
+	if err != nil {
+		ServeJSON(c, ReadPostDataError, err, nil)
+		return
+	}
+	group := c.Query("group")
+	method := libs.NewAPIMethod("")
+	err = json.Unmarshal(data, &method)
+	if err != nil {
+		ServeJSON(c, ParseDataError, err, nil)
+		return
+	}
+	err = libs.Config.AddMethod(name, group, apiName, method)
+	if err != nil {
+		ServeJSON(c, AddObjectError, err, nil)
+		return
+	}
+	ServeJSON(c, Success, "success", nil)
 }
 
 //GetService 获取API列表
@@ -119,9 +152,9 @@ func AddService(c *gin.Context){
 }
 
 //GetMethods 获取API的method列表
-//@route [GET] /admin/api/:name/methods?service=[string]&group=[string]
+//@route [GET] /admin/api/methods?api=[string]&service=[string]&group=[string]
 func GetMethods(c *gin.Context){
-	api := c.Param("name")
+	api := c.Query("api")
 	service := c.Query("service")
 	group := c.Query("group")
 	svc := libs.Config.GetService(service)

@@ -1,40 +1,40 @@
 <template>
- <div class="layout" id="app">
-        <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
-          <menu-container :services="serviceNames"/>
-        </Sider>
-        <Layout :style="{marginLeft: '200px'}">
-              <router-view/>
-        </Layout>
-    </div>
+  <div class="layout" id="app">
+    <Sider :style="{position: 'fixed', height: '100vh', left: 0, overflow: 'auto'}">
+      <menu-container :services="serviceNames" />
+    </Sider>
+    <Layout :style="{marginLeft: '200px'}">
+      <router-view />
+    </Layout>
+  </div>
 </template>
 <script>
-import {GetServices} from "./api/api"
-import MenuContainer from "./components/Menu.vue"
+import { GetServices } from "./api/api";
+import MenuContainer from "./components/Menu.vue";
 export default {
   name: "App",
   components: {
     MenuContainer
   },
-  data(){
+  data() {
     return {
-      serviceNames: [],
-    }
+      serviceNames: []
+    };
   },
   methods: {
-    getServices:function(){
-      GetServices().then(res=>{
-        if(res.code == 0) {
+    getServices: function() {
+      GetServices().then(res => {
+        if (res.code == 0) {
           this.serviceNames = res.data;
         }
-        console.info("services:", this.serviceNames)
-      })
+        console.info("services:", this.serviceNames);
+      });
     }
   },
-  mounted(){
+  mounted() {
     this.getServices();
   }
-}
+};
 </script>
 <style>
 #app {

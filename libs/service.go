@@ -54,8 +54,8 @@ func (s *Service)AddOwnAPI(api *API)error{
 	s.APIs[api.Name] = api
 	return nil
 }
-//GetAPI 获得匹配URL的API配置
-func (s *Service)GetAPI(URL string)(*API, error){
+//MatchAPI 匹配URL的API
+func (s *Service)MatchAPI(URL string)(*API, error){
 	if URL == "" {
 		return nil, fmt.Errorf("404 not found")
 	}
@@ -84,6 +84,26 @@ func (s *Service)GetAPI(URL string)(*API, error){
 	return nil, fmt.Errorf("404 not found")
 }
 
+//GetAPI 获得匹配URL的API配置
+func (s *Service)GetAPI(name string, group string)(*API, error){
+	if group == ""{
+		for api := range s.APIs {
+			if api == name {
+				return s.APIs[api], nil
+			}
+		}
+	}
+	if g, ok := s.Groups[group]; ok {
+		for api := range g.APIs {
+			if api == name {
+				return g.APIs[api], nil
+			}
+		}
+	}
+	return nil, fmt.Errorf("404 not found")
+}
+
+
 func (s *Service)ServeHTTP(w http.ResponseWriter, r *http.Request){
 	msg := ResponseMessage{}
 	if r.RequestURI == "/favicon.ico" {
@@ -92,8 +112,8 @@ func (s *Service)ServeHTTP(w http.ResponseWriter, r *http.Request){
 		w.Write(msg.ToBytes())
 		return
 	}
-	fmt.Printf("%s [%s] %s\n", time.Now().Format("2000-01-02 15:04:05"), r.Method, r.RequestURI)
-	api, err := s.GetAPI(r.RequestURI)
+	fmt.Printf("%s [%s] %s\n", time.Now().Format("2006-01-02 15:04:05"), r.Method, r.RequestURI)
+	api, err := s.MatchAPI(r.RequestURI)
 	if err != nil {
 		msg.Code = 404
 		msg.Message = err.Error()
@@ -107,7 +127,7 @@ func (s *Service)ServeHTTP(w http.ResponseWriter, r *http.Request){
 		w.Write(msg.ToBytes())
 		return
 	}
-	msg.Data = args.Responese
+	msg.Data = args.Response
 	w.Write(msg.ToBytes())
 }
 

@@ -32,14 +32,16 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/recommended",
       "eslint:recommended",
       "@vue/prettier"
     ],
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "vue/html-end-tags": "off"
+    }
   },
   "browserslist": [
     "> 1%",

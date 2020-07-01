@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Header :style="{background: '#fff'}">Service {{service.name}}</Header>
+    <Header class="service-header"><h3>Service {{service.name}}</h3></Header>
     <service-container :service="service"/>
   </div>
 </template>

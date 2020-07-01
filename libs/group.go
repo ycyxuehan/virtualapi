@@ -36,11 +36,11 @@ func (g *APIGroup)AddAPI(a *API)error {
 func (g *APIGroup)AddMethod(name string, method string, args *APIMethod)error {
 	for l := range g.APIs {
 		if l == name {
-			return g.APIs[name].AddMethod(method, args)
+			return g.APIs[name].AddMethod(args)
 		}
 	}
 	api := NewAPI(name)
-	api.AddMethod(method, args)
+	api.AddMethod(args)
 	g.AddAPI(api)
 	return nil
 }

@@ -13,7 +13,7 @@ func main(){
 	header1 := make(map[string]string)
 	header1["Content-Type"] = "application/json"
 	method1 := libs.APIMethod{
-		Responese: resp1,
+		Response: resp1,
 		Headers: header1,
 		Method: "GET",
 	}
@@ -23,7 +23,7 @@ func main(){
 	resp2["age"] = 32
 	resp2["ccc"] = "x6"
 	method2 := libs.APIMethod{
-		Responese: resp2,
+		Response: resp2,
 		Headers: header1,
 		Method: "POST",
 	}

@@ -18,11 +18,12 @@ func main(){
 	router := gin.New()
 	group := router.Group("/admin")
 	group.GET("/service/:name", admin.GetService)
-	group.POST("/api", admin.AddAPI)
+	group.POST("/api", admin.AddEmptyAPI)
 	group.POST("/service", admin.AddService)
 	group.POST("/group", admin.AddGroup)
-	group.GET("/api/:name/methods", admin.GetMethods)
+	group.GET("/api/methods", admin.GetMethods)
 	group.GET("/services", admin.GetServices)
+	group.POST("/api/method", admin.AddMethod)
 	go router.Run("0.0.0.0:2999")
 
 	done := make(chan libs.Message)
@@ -40,7 +41,7 @@ func main(){
 					delete(running, msg.Service)
 				}
 				if len(running) == 0 {
-					libs.Config.Save("config.json")
+					libs.Config.Save()
 				}
 			}
 		}
