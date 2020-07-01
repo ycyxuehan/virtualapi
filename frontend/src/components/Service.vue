@@ -21,20 +21,22 @@
         <Button type="primary" style="width:80%;" @click="showAddGoupDlg()">添加组</Button>
       </Col>
     </Row>
-    
-    <Row v-if="service.groups" v-for="(group, index) in service.groups" :key="index">
-      <Card class="group-card" dis-hover>
-        <Row slot="title">
-          <Col span="22">
-            <h3>API组{{group.name}}</h3>
-          </Col>
-          <Col span="2">
-            <Button type="primary" style="width:80%;" @click="showAddApiDlg(group.name)">添加API</Button>
-          </Col>
-        </Row>
-        <interface-container v-if="group.apis" :apis="group.apis" :service="service.name" :group="group.name"></interface-container>
-      </Card>
-    </Row>
+    <div v-if="service.groups">
+      <Row v-for="(group, index) in service.groups" :key="index">
+        <Card class="group-card" dis-hover>
+          <Row slot="title">
+            <Col span="22">
+              <h3>API组{{group.name}}</h3>
+            </Col>
+            <Col span="2">
+              <Button type="primary" style="width:80%;" @click="showAddApiDlg(group.name)">添加API</Button>
+            </Col>
+          </Row>
+          <interface-container v-if="group.apis" :apis="group.apis" :service="service.name" :group="group.name"></interface-container>
+        </Card>
+      </Row>
+    </div>
+   
     <Modal v-model="addAPIDlgVis" title="添加一个API">
       <Row>
         <Col span="8">
