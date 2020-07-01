@@ -79,5 +79,5 @@ module.exports = {
         },
         // before: app => { }
     },
-    lintOnSave: true
+    lintOnSave: false
 }

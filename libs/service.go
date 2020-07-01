@@ -12,8 +12,8 @@ type Service struct {
 	Name        string  `json:"name"`
 	Port        int     `json:"port"`
 	Prefix      string  `json:"prefix"`
-	Groups      map[string]*APIGroup `json:"groups"`
-	APIs        map[string]*API   `json:"apis"`
+	Groups      []*APIGroup `json:"groups"`
+	APIs        []*API   `json:"apis"`
 	Description string  `json:"description"`
 	Enabled     bool    `json:"enabled"`
 }
@@ -25,8 +25,8 @@ func NewService(name string) *Service {
 	}
 	svc := Service{
 		Name: name,
-		Groups: make(map[string]*APIGroup),
-		APIs: make(map[string]*API),
+		Groups: []*APIGroup{},
+		APIs: []*API{},
 		Enabled: true,
 		Port: 3000,
 	}
@@ -35,23 +35,23 @@ func NewService(name string) *Service {
 
 //AddGroup 添加一个API组
 func (s *Service)AddGroup(group *APIGroup)error{
-	for g := range s.Groups {
-		if g == group.Name {
+	for _, g := range s.Groups {
+		if g.Name == group.Name {
 			return fmt.Errorf("group [%s] 已存在", group.Name)
 		}
 	}
-	s.Groups[group.Name] = group
+	s.Groups = append(s.Groups, group)
 	return nil
 }
 
 //AddOwnAPI 添加一个独立API
 func (s *Service)AddOwnAPI(api *API)error{
-	for g := range s.APIs {
-		if g == api.Name {
+	for _, a := range s.APIs {
+		if a.Name == api.Name {
 			return fmt.Errorf("api [%s] 已存在", api.Name)
 		}
 	}
-	s.APIs[api.Name] = api
+	s.APIs = append(s.APIs, api)
 	return nil
 }
 //MatchAPI 匹配URL的API
@@ -62,23 +62,23 @@ func (s *Service)MatchAPI(URL string)(*API, error){
 	if s.Prefix != "" && strings.Index(URL, s.Prefix) < 0 {
 		return nil, fmt.Errorf("404 not found")
 	}
-	for group := range s.Groups {
-		if strings.Index(URL, strings.Join([]string{s.Prefix, group}, "")) > -1 {
+	for _, group := range s.Groups {
+		if strings.Index(URL, strings.Join([]string{s.Prefix, group.Name}, "")) > -1 {
 			//组匹配，匹配API
-			for api := range s.Groups[group].APIs {
+			for _, api := range group.APIs {
 				//完全匹配
-				if strings.Index(URL, strings.Join([]string{s.Prefix, group, api}, "")) > -1 {
-					return s.Groups[group].APIs[api], nil
+				if strings.Index(URL, strings.Join([]string{s.Prefix, group.Name, api.Name}, "")) > -1 {
+					return api, nil
 				}
 			}
 			
 		}
 	}
 	//没有匹配的group，匹配独立API
-	for api := range s.APIs {
+	for _, api := range s.APIs {
 		//完全匹配
-		if strings.Index(URL, strings.Join([]string{s.Prefix, api}, "")) > -1 {
-			return s.APIs[api], nil
+		if strings.Index(URL, strings.Join([]string{s.Prefix, api.Name}, "")) > -1 {
+			return api, nil
 		}
 	}
 	return nil, fmt.Errorf("404 not found")
@@ -87,16 +87,16 @@ func (s *Service)MatchAPI(URL string)(*API, error){
 //GetAPI 获得匹配URL的API配置
 func (s *Service)GetAPI(name string, group string)(*API, error){
 	if group == ""{
-		for api := range s.APIs {
-			if api == name {
-				return s.APIs[api], nil
+		for _, api := range s.APIs {
+			if api.Name == name {
+				return api, nil
 			}
 		}
 	}
-	if g, ok := s.Groups[group]; ok {
-		for api := range g.APIs {
-			if api == name {
-				return g.APIs[api], nil
+	for _, g := range s.Groups {
+		for _, api := range g.APIs {
+			if api.Name == name {
+				return api, nil
 			}
 		}
 	}
@@ -143,22 +143,29 @@ func (s *Service)Run(done chan Message)error{
 
 //IsGroupExists service中是否存在API组
 func (s *Service)IsGroupExists(group string)bool{
-	for g := range s.Groups {
-		if g == group {
+	for _, g := range s.Groups {
+		if g.Name == group {
 			return true
 		}
 	}
 	return false
 }
+//GetGroup 获取指定group
+func (s *Service)GetGroup(name string)(*APIGroup, error){
+	for _, g := range s.Groups {
+		if g.Name == name {
+			return g, nil
+		}
+	}
+	return nil, fmt.Errorf("group not found")
+}
 //AddGroupAPI 添加一个API到group
 func (s *Service)AddGroupAPI(group string, api *API)error{
-	if s.IsGroupExists(group) {
-		return s.Groups[group].AddAPI(api)
+	g, err := s.GetGroup(group)
+	if err != nil {
+		return err
 	}
-	g := NewAPIGroup(group)
-	g.AddAPI(api)
-	s.Groups[group] = g
-	return nil
+	return g.AddAPI(api)
 }
 
 //AddAPI 添加一个API
@@ -172,14 +179,9 @@ func (s *Service)AddAPI(api *API, group string)error{
 //GetMethods 获取method列表
 func (s *Service)GetMethods(api string, group string)[]string{
 	res := []string{}
-	if group == "" {
-		if g, ok:= s.Groups[group]; ok {
-			return g.GetMethods(api)
-		}
-	}else {
-		if a, ok := s.APIs[api]; ok {
-			return a.GetMethods()
-		}
+	a, err := s.GetAPI(api, group)
+	if err!=nil {
+		return res
 	}
-	return res
+	return a.GetMethods()
 }

@@ -55,7 +55,7 @@ func NewAPIMethod(m string)*APIMethod{
 //API Api conf
 type API struct {
 	Name string `json:"name"`
-	Methods map[string]*APIMethod	`json:"methods"`
+	Methods []*APIMethod	`json:"methods"`
 	Auth string	`json:"auth"`
 } 
 
@@ -63,26 +63,28 @@ type API struct {
 func NewAPI(name string) *API {
 	return &API{
 		Name: name,
-		Methods: make(map[string]*APIMethod),
+		Methods: []*APIMethod{},
 		Auth: "",
 	}
 }
 
 //AddMethod 为API添加一个method
 func (api *API)AddMethod(args *APIMethod)error{
-	for m := range api.Methods {
-		if m == args.Method {
+	for _, m := range api.Methods {
+		if m.Method == args.Method {
 			return fmt.Errorf("[%s] method is exists", args.Method)
 		}
 	}
-	api.Methods[strings.ToUpper(args.Method)] = args
+	api.Methods = append(api.Methods, args)
 	return nil
 }
 
 //GetMethod 获取一个对应Method的配置
 func (api *API)GetMethod(method string)(*APIMethod, error){
-	if args, ok := api.Methods[method]; ok {
-		return args, nil
+	for _, m := range api.Methods{
+		if m.Method == method {
+			return m, nil
+		}
 	}
 	return nil, fmt.Errorf("404 not found")
 }
@@ -122,8 +124,8 @@ func (a *APIMethod)DelHeader(key string){
 //GetMethods 获取method列表
 func (api *API)GetMethods()[]string{
 	res := []string{}
-	for m := range api.Methods {
-		res = append(res, m)
+	for _, m := range api.Methods {
+		res = append(res, m.Method)
 	}
 	return res
 }

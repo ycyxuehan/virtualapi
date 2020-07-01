@@ -4,14 +4,14 @@
 			"name": "demo",
 			"port": 3000,
 			"prefix": "",
-			"groups": {
-				"/api/v1": {
+			"groups": [
+				{
 					"name": "/api/v1",
-					"apis": {
-						"/demo": {
+					"apis": [
+						{
 							"name": "/demo",
-							"methods": {
-								"GET": {
+							"methods": [
+								{
 									"method": "GET",
 									"response": {
 										"age": 12,
@@ -24,7 +24,7 @@
 									},
 									"queries": null
 								},
-								"POST": {
+								{
 									"method": "POST",
 									"response": {
 										"age": 32,
@@ -37,18 +37,18 @@
 									},
 									"queries": null
 								}
-							},
+							],
 							"auth": ""
 						}
-					},
+					],
 					"auth": ""
 				}
-			},
-			"apis": {
-				"/demo": {
+			],
+			"apis": [
+				{
 					"name": "/demo",
-					"methods": {
-						"GET": {
+					"methods": [
+						{
 							"method": "GET",
 							"response": {
 								"age": 12,
@@ -61,7 +61,7 @@
 							},
 							"queries": null
 						},
-						"POST": {
+						{
 							"method": "POST",
 							"response": {
 								"age": 32,
@@ -74,10 +74,10 @@
 							},
 							"queries": null
 						}
-					},
+					],
 					"auth": ""
 				}
-			},
+			],
 			"description": "",
 			"enabled": true
 		},
@@ -85,12 +85,12 @@
 			"name": "default",
 			"port": 3001,
 			"prefix": "",
-			"groups": {},
-			"apis": {
-				"/demo": {
+			"groups": [],
+			"apis": [
+				{
 					"name": "/demo",
-					"methods": {
-						"GET": {
+					"methods": [
+						{
 							"method": "GET",
 							"response": {
 								"age": 12,
@@ -103,7 +103,7 @@
 							},
 							"queries": null
 						},
-						"POST": {
+						{
 							"method": "POST",
 							"response": {
 								"age": 32,
@@ -116,10 +116,10 @@
 							},
 							"queries": null
 						}
-					},
+					],
 					"auth": ""
 				}
-			},
+			],
 			"description": "",
 			"enabled": true
 		}

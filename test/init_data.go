@@ -17,7 +17,7 @@ func main(){
 		Headers: header1,
 		Method: "GET",
 	}
-	api.AddMethod("GET", &method1)
+	api.AddMethod(&method1)
 	resp2 := make(map[string]interface{})
 	resp2["name"] = "tom"
 	resp2["age"] = 32
@@ -27,7 +27,7 @@ func main(){
 		Headers: header1,
 		Method: "POST",
 	}
-	api.AddMethod("POST", &method2)
+	api.AddMethod(&method2)
 
 	group := libs.NewAPIGroup("/api/v1")
 	group.AddAPI(api)
@@ -43,5 +43,5 @@ func main(){
 	service1.Port = 3001
 	service1.AddAPI(api, "")
 	config.AddService(service1)
-	config.Save("/git/virtualapi/config.json")
+	config.SaveAs("/git/virtualapi/config.json")
 }

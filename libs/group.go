@@ -8,14 +8,14 @@ import (
 type APIGroup struct {
 	Name string `json:"name"`
 	// APIs []*API  `json:"apis"`
-	APIs map[string]*API `json:"apis"`
+	APIs []*API `json:"apis"`
 	Auth string `json:"auth"`
 }
 
 //NewAPIGroup create a new APIGroup
 func NewAPIGroup(name string) *APIGroup {
 	return &APIGroup{
-		APIs: make(map[string]*API),
+		APIs: []*API{},
 		Name: name,
 		Auth: "",
 	}
@@ -23,20 +23,20 @@ func NewAPIGroup(name string) *APIGroup {
 
 //AddAPI 添加一个API
 func (g *APIGroup)AddAPI(a *API)error {
-	for l := range g.APIs {
-		if l == a.Name {
-			return fmt.Errorf("api [%s] is exits", l)
+	for _, api := range g.APIs {
+		if api.Name == a.Name {
+			return fmt.Errorf("api [%s] is exits", api.Name)
 		}
 	}
-	g.APIs[a.Name] = a
+	g.APIs = append(g.APIs, a)
 	return nil
 }
 
 //AddMethod 添加一个method
 func (g *APIGroup)AddMethod(name string, method string, args *APIMethod)error {
-	for l := range g.APIs {
-		if l == name {
-			return g.APIs[name].AddMethod(args)
+	for _, a := range g.APIs {
+		if a.Name == name {
+			return a.AddMethod(args)
 		}
 	}
 	api := NewAPI(name)
@@ -48,8 +48,10 @@ func (g *APIGroup)AddMethod(name string, method string, args *APIMethod)error {
 //GetMethods 获取method列表
 func (g *APIGroup)GetMethods(name string)[]string{
 	res := []string{}
-	if a, ok := g.APIs[name]; ok {
-		return a.GetMethods()
+	for _, a := range g.APIs {
+		if a.Name == name {
+			return a.GetMethods()
+		}
 	}
 	return res
 }
