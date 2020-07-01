@@ -1,46 +1,50 @@
 <template>
   <div class="home">
-    <Header class="group-title"><Row>
-      <Col span="22">
-        <h3>Service {{service.name}} <Tag>端口：{{service.port}}</Tag></h3>
-      </Col>
-      <Col span="2">
-        <Button type="primary" @click="showAddServiceDlg">添加服务</Button>
-      </Col>
-    </Row></Header>
-    <service-container :service="service"/>
-    <Modal
-      v-model="addServiceDlgVis"
-      title="添加一个服务"
-      @on-ok="addService"
-      >
+    <Header class="group-title">
       <Row>
+        <Col span="22">
+          <h3>
+            Service {{service.name}}
+            <Tag>端口：{{service.port}}</Tag>
+          </h3>
+        </Col>
+        <Col span="2">
+          <Button type="primary" @click="showAddServiceDlg()">添加服务</Button>
+        </Col>
+      </Row>
+    </Header>
+    <service-container :service="service" />
+    <Modal v-model="addServiceDlgVis" title="添加一个服务" @on-ok="addService">
+      <Row class="edit-row">
         <Col span="8">
           <span>服务名称</span>
         </Col>
         <Col span="16">
-          <Input v-model="addServiceData.name" placeholder=""></Input>
+          <Input v-model="addServiceData.name" placeholder></Input>
         </Col>
       </Row>
-      <Col span="8">
+      <Row class="edit-row">
+        <Col span="8">
           <span>服务端口</span>
         </Col>
         <Col span="16">
-          <Input v-model="addServiceData.port" placeholder=""></Input>
+          <Input v-model="addServiceData.port" placeholder></Input>
         </Col>
       </Row>
-             <Col span="8">
+      <Row class="edit-row">
+        <Col span="8">
           <span>API前缀</span>
         </Col>
         <Col span="16">
-          <Input v-model="addServiceData.prefix" placeholder=""></Input>
+          <Input v-model="addServiceData.prefix" placeholder></Input>
         </Col>
       </Row>
-             <Col span="8">
+      <Row class="edit-row">
+        <Col span="8">
           <span>说明</span>
         </Col>
         <Col span="16">
-          <Input v-model="addServiceData.description" placeholder=""></Input>
+          <Input v-model="addServiceData.description" placeholder></Input>
         </Col>
       </Row>
     </Modal>
@@ -50,44 +54,48 @@
 <script>
 // @ is an alias to /src
 import ServiceContainer from "@/components/Service.vue";
-import {GetService, AddService} from "@/api/api.js"
+import { GetService, AddService } from "@/api/api.js";
 export default {
   name: "Service",
   components: {
     ServiceContainer
   },
-  data(){
+  data() {
     return {
-      service:{},
-      addServiceData:{
+      service: {},
+      addServiceData: {
         name: "",
+        port: 0,
+        description: "",
+        prefix:""
       },
-    }
+      addServiceDlgVis: false
+    };
   },
   methods: {
-    getService:function(){
+    getService: function() {
       let name = this.$route.query.service;
-      console.info("actived menu:", name)
-      GetService(name).then(res=>{
-        console.info("service:", res)
-        if(res.code == 0) {
+      console.info("actived menu:", name);
+      GetService(name).then(res => {
+        console.info("service:", res);
+        if (res.code == 0) {
           this.service = res.data;
         }
-      })
+      });
     },
-    addService: function(){
-      AddService(this.addServiceData).then(res=>{
-        console.info("add service:", res)
-        if(res.code == 0){
-
+    addService: function() {
+      this.addServiceData.port = Number(this.addServiceData.port);
+      AddService(this.addServiceData).then(res => {
+        console.info("add service:", res);
+        if (res.code == 0) {
         }
-      })
+      });
     },
-    showAddServiceDlg: function(){
-      this.addServiceDlgVis = true
+    showAddServiceDlg: function() {
+      this.addServiceDlgVis = true;
     }
   },
-  mounted(){
+  mounted() {
     this.getService();
   }
 };

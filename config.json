@@ -127,6 +127,15 @@
 			],
 			"description": "",
 			"enabled": true
+		},
+		{
+			"name": "test",
+			"port": 3002,
+			"prefix": "",
+			"groups": [],
+			"apis": [],
+			"description": "",
+			"enabled": true
 		}
 	]
 }
